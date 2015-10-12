@@ -1,5 +1,5 @@
 //import {singleton, container, dependencies} from '../libs/needlepoint';
-import $ from '../libs/jquery';
+import $ from '../../../library/js/libs/jquery';
 
 
 export default function melloOffCanvas (el, trigger, slided, options){
