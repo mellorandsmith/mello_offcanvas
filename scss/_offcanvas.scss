@@ -1,0 +1,123 @@
+/**
+ * 	MELLO OFF CANVAS
+ */
+$offcanvas-time: 0.4s;
+$offcanvas-size : 80%;
+
+$main-color: $gray;
+
+.offcanvas-menu{
+  background-color: $main-color;
+  position: fixed;
+  top: 0;
+  right: -100%;
+  z-index: $z-index-6;
+  visibility: visible;
+  opacity: 0;
+  padding-top: 50px;
+  height: 100%;
+  width: $offcanvas-size;
+  overflow-y: auto;
+  @include transition(transform $offcanvas-time,opacity ($offcanvas-time - 0.2)); 
+ // @include transform(translateZ(1));
+  -webkit-tap-highlight-color: black;
+  -webkit-backface-visibility: hidden;
+  &.active{
+  @include transform(translateX(-120%));
+  -webkit-tap-highlight-color: black;
+  -webkit-backface-visibility: hidden;
+  opacity:1;
+  will-change: translate, opacity;
+  }
+  
+  .h4{
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    a{
+      padding: 0.1em;
+      &:visited{
+        color:white;
+      }
+    }
+  }
+
+}
+
+.nav-toggle {
+  display:block;
+  width:50px;
+  height:50px;
+  position: fixed;
+  right:0px;
+  top: 0px;
+  cursor: pointer;
+  opacity: 1;
+  z-index: $z-index-6 + 1;
+  background-color:$main-color;
+  
+  #nav-close{
+    opacity: 0
+  }
+  #nav-open{
+  
+  }
+  &.active{
+    background-color: lighten($main-color, 15%);
+    #nav-close{
+      opacity: 1;
+    }
+    #nav-open{
+      opacity: 0;
+    }
+  }
+
+}
+
+
+#container, .slide-dat{
+  //@include transform(translateX(none));
+ // @include transform(translateZ(0));
+  @include transition(all $offcanvas-time+0.2);
+  
+  &.active{
+    //@include transform(translateX(-10%));
+  }
+}
+
+@media screen and (min-width: 1030px) {
+  $offcanvas-size : 33%;
+  
+  #content, .slide-dat{
+   // @include transform(translateX(none));
+    @include transition(all $offcanvas-time);
+    
+    &.active{
+      //@include transform(translateX(-$offcanvas-size + 2%));
+    }
+  }
+
+  .offcanvas-menu{
+    right:0;
+    position: fixed;
+    padding-top: 50px;
+    width: $offcanvas-size;
+    margin: 0;
+    @include transform(translateX(100%));
+    &.active{
+      @include transform(translateX(0));
+    }
+  }
+  right:50px;
+  top: 50px;
+
+}
+
+@media screen and (min-width:1030px){
+  
+  .nav-toggle {
+    right:30px;
+    top: 30px;
+  }
+  
+}
