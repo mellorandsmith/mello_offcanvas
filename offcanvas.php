@@ -1,12 +1,12 @@
 <?php
 
-namespace Modules\Offcanvas;
+namespace Modules\Mello_Offcanvas;
 
 class Offcanvas {
 
 	public static function render() {
 		// display the wp3 menu if available
-		wp_nav_menu(array(
+		return wp_nav_menu(array(
 			'container' => false,                           // remove nav container
 			'container_class' => 'menu clearfix',           // class of container (should you choose to use it)
 			'menu' => __( 'The Main Menu', 'mellotheme' ),  // nav name
@@ -17,6 +17,7 @@ class Offcanvas {
 			'link_before' => '',                            // before each link
 			'link_after' => '',                             // after each link
 			'depth' => 0,                                   // limit the depth of the nav
+			'echo'	=> false,
 			'fallback_cb' => 'bones_main_nav_fallback',      // fallback function
 			//'walker' => new Mello_Walker
 		));
