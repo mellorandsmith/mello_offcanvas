@@ -1,12 +1,13 @@
 /**
- * 	MELLO OFF CANVAS
+ *  MELLO OFF CANVAS
  */
 $offcanvas-time: 0.4s;
-$offcanvas-size : 80%;
+$offcanvas-size : 100%; 
 
-$main-color: $gray;
+$main-color: #A1A1A1;
 
 .offcanvas-menu{
+  overflow:hidden;
   background-color: $main-color;
   position: fixed;
   top: 0;
@@ -14,32 +15,62 @@ $main-color: $gray;
   z-index: $z-index-6;
   visibility: visible;
   opacity: 0;
-  padding-top: 50px;
+  padding-top: 77px;
   height: 100%;
   width: $offcanvas-size;
-  overflow-y: auto;
   @include transition(transform $offcanvas-time,opacity ($offcanvas-time - 0.2)); 
  // @include transform(translateZ(1));
   -webkit-tap-highlight-color: black;
   -webkit-backface-visibility: hidden;
   &.active{
-  @include transform(translateX(-120%));
+  @include transform(translateX(-100%));
   -webkit-tap-highlight-color: black;
   -webkit-backface-visibility: hidden;
   opacity:1;
   will-change: translate, opacity;
   }
-  
-  .h4{
-    width: 100%;
-    text-align: center;
-    text-transform: uppercase;
-    a{
-      padding: 0.1em;
-      &:visited{
-        color:white;
+  .nav > li:last-of-type{
+    .sub-menu li{
+      &:last-of-type{
+        a{
+          &:before{ 
+            display: none;
+          }
+        }
       }
     }
+  }
+
+  .h4{
+    width: 100%;
+    text-align: left;
+    text-transform: uppercase;
+    margin:0;
+    color:$white;
+    a{
+      font-weight:500;
+      padding: 0;
+      line-height:44px;
+      @extend .f-size-big;
+      letter-spacing:1px;
+      &:visited{ 
+        color:$white;
+      }
+      &:before{ 
+        content:"";
+        width:80px;
+        height:2px;
+        background-color:$noilly-gold;
+        position:absolute;
+        margin-top:42px;
+
+      }
+
+      
+    }
+  }
+  .sub-menu .h4 a:before{
+        box-shadow:0px 1px 0px 0px rgba(199, 157, 37, 1);
   }
 
 }
@@ -49,12 +80,13 @@ $main-color: $gray;
   width:50px;
   height:50px;
   position: fixed;
-  right:0px;
-  top: 0px;
+  right:4.5%;
+  top:10px;
   cursor: pointer;
   opacity: 1;
   z-index: $z-index-6 + 1;
-  background-color:$main-color;
+  background-color:transparent;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
   
   #nav-close{
     opacity: 0
@@ -63,7 +95,6 @@ $main-color: $gray;
   
   }
   &.active{
-    background-color: lighten($main-color, 15%);
     #nav-close{
       opacity: 1;
     }
@@ -78,6 +109,7 @@ $main-color: $gray;
 #container, .slide-dat{
   //@include transform(translateX(none));
  // @include transform(translateZ(0));
+ padding-top:70px;
   @include transition(all $offcanvas-time+0.2);
   
   &.active{
@@ -85,39 +117,89 @@ $main-color: $gray;
   }
 }
 
-@media screen and (min-width: 1030px) {
-  $offcanvas-size : 33%;
-  
-  #content, .slide-dat{
-   // @include transform(translateX(none));
-    @include transition(all $offcanvas-time);
-    
-    &.active{
-      //@include transform(translateX(-$offcanvas-size + 2%));
-    }
-  }
 
-  .offcanvas-menu{
-    right:0;
-    position: fixed;
-    padding-top: 50px;
-    width: $offcanvas-size;
-    margin: 0;
-    @include transform(translateX(100%));
-    &.active{
-      @include transform(translateX(0));
-    }
-  }
-  right:50px;
-  top: 50px;
 
+/* Menu */
+.menu-wrap {
+  height: 100%;
+  -webkit-transform: translate3d(-320px,0,0);
+  transform: translate3d(-320px,0,0);
+  -webkit-transition: -webkit-transform 0.4s;
+  transition: transform 0.4s;
+  -webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+  transition-timing-function: cubic-bezier(0.7,0,0.3,1);
 }
 
-@media screen and (min-width:1030px){
-  
-  .nav-toggle {
-    right:30px;
-    top: 30px;
-  }
-  
+.menu, 
+#menu-main-menu {
+  height: 100%;
+}
+
+#menu-main-menu {
+  -webkit-transform: translate3d(0,100%,0);
+  transform: translate3d(0,100%,0);
+}
+
+#menu-main-menu li {
+  display: block;
+  -webkit-transform: translate3d(0,500px,0);
+  transform: translate3d(0,500px,0);
+}
+
+#menu-main-menu,
+#menu-main-menu li {
+  -webkit-transition: -webkit-transform 0s 0.4s;
+  transition: transform 0s 0.4s;
+  -webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+  transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+}
+
+#menu-main-menu li:nth-child(2) {
+  -webkit-transform: translate3d(0,1000px,0);
+  transform: translate3d(0,1000px,0);
+}
+
+#menu-main-menu li:nth-child(3) {
+  -webkit-transform: translate3d(0,1500px,0);
+  transform: translate3d(0,1500px,0);
+}
+
+#menu-main-menu li:nth-child(4) {
+  -webkit-transform: translate3d(0,2000px,0);
+  transform: translate3d(0,2000px,0);
+}
+
+#menu-main-menu li:nth-child(5) {
+  -webkit-transform: translate3d(0,2500px,0);
+  transform: translate3d(0,2500px,0);
+}
+
+#menu-main-menu li:nth-child(6) {
+  -webkit-transform: translate3d(0,3000px,0);
+  transform: translate3d(0,3000px,0);
+}
+
+.show-menu #menu-main-menu,
+.show-menu #menu-main-menu li {
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
+  -webkit-transition: -webkit-transform 0.8s;
+  transition: transform 0.8s;
+  -webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+  transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+}
+
+.show-menu #menu-main-menu li {
+  -webkit-transition-duration: 0.9s;
+  transition-duration: 0.9s;
+}
+
+.show-menu .content::before {
+  opacity: 1;
+  -webkit-transition: opacity 0.8s;
+  transition: opacity 0.8s;
+  -webkit-transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+  transition-timing-function: cubic-bezier(0.7,0,0.3,1);
+  -webkit-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
 }

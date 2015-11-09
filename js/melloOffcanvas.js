@@ -8,7 +8,7 @@ export default function melloOffCanvas (el, trigger, slided, options){
     this.$el = $(el);
     this.$trigger = $(trigger);
     this.$slided = $(slided);
-
+    this.$bodyEl = document.body;
     this._init(options);
 
   }
@@ -70,6 +70,9 @@ melloOffCanvas.prototype = {
         this.$el.addClass("active");
         this.$slided.addClass("active");
         this.$trigger.addClass("active");
+        this.$trigger.addClass("is-open");
+        this.$trigger.removeClass("is-closed");
+        classie.add( this.$bodyEl, 'show-menu' );
         this.open = true;
         this._onMenuOpen();
     },
@@ -77,6 +80,9 @@ melloOffCanvas.prototype = {
         this.$el.removeClass("active");
         this.$slided.removeClass("active");
         this.$trigger.removeClass("active");
+        this.$trigger.removeClass("is-open");
+        this.$trigger.addClass("is-closed");
+        classie.remove( this.$bodyEl, 'show-menu' );
         this.open = false;
         this._onMenuClose();
     },
