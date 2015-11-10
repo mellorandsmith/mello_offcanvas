@@ -23,7 +23,7 @@ melloOffCanvas.defaults = {
 
 melloOffCanvas.prototype = {
     _init : function(options){
-        console.log('offcanvas menu initialised');
+        //console.log('offcanvas menu initialised');
         this.options = $.extend( true, {}, melloOffCanvas.defaults, options );
         this.open = false;
         this._layout();
