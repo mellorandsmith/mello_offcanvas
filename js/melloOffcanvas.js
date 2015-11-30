@@ -1,82 +1,116 @@
-//import {singleton, container, dependencies} from '../libs/needlepoint';
-import $ from '../../../library/js/libs/jquery';
+import * as utils from './utils/offcanvas_utils'
 
-
+/*
+    el : class without .
+    trigger : class without .
+    slided : ID without #
+ */
 export default function melloOffCanvas (el, trigger, slided, options){
-  
-  if ($(el).length){
-    this.$el = $(el);
-    this.$trigger = $(trigger);
-    this.$slided = $(slided);
-
+  if (el.length){
+    this.el = document.getElementsByClassName(el)[0];
+    this.trigger = document.getElementsByClassName(trigger);
+    this.slided = document.getElementById(slided);
     this._init(options);
-
   }
-
 }
 
 melloOffCanvas.defaults = {
   option1: true,
   option2: false
-
 }
 
 melloOffCanvas.prototype = {
     _init : function(options){
         console.log('offcanvas menu initialised');
-        this.options = $.extend( true, {}, melloOffCanvas.defaults, options );
+        this.options = utils.extend( melloOffCanvas.defaults, options );
         this.open = false;
         this._layout();
         this._initEvents();
     },
     _layout: function(){
-        this.menuItems = this.$el.find("li");
+        this.menuItems = this.el.getElementsByTagName("li");
     },
     _initEvents : function (){
         var self = this;
         // menu button handler
-        this.$trigger.on("click",function(ev){
-            ev.stopPropagation();
-            ev.preventDefault();
-            if(self.open){
-                self._resetMenu();
-            }
-            else{
-                self._openMenu();
-                document.addEventListener( "click", function( ev ) {
-                    if ( self.open && !( $(ev.target).parents(self.$el.selector).length || ev.target==self.$el[0]) ){
-                        onBodyClick(this);
-                    } 
-                });
-            }
-        });
 
-        var onBodyClick = function(el){
-          self._resetMenu();
-          self.$el.off("click", onBodyClick);
-        }
+        self.triggersHandler();
 
-        self.$el.children('a').on('click', function(e) {
-            if(self.open) {
-                closeSiteNav();
-            }
-        });
-
-        $(document).keyup(function(e) { 
+       document.addEventListener('keyup', function(e) { 
             if (e.keyCode == 27) { self._toggleMenu() } 
         });
     },
+    onBodyClick:function(el){
+        var self = this;
+        self._resetMenu();
+        self.el.removeEventListener("click", self.onBodyClick);
+    },
+    triggersHandler:function(){
+
+        var self = this;
+
+        var triggersCount = this.trigger.length;
+
+        if ( !triggersCount ){
+            buttonAction( self.trigger );
+        }else{
+            for( var i = 0; i < triggersCount; i++){
+                buttonAction(self.trigger[i]);
+            }
+        }
+
+        function buttonAction(el){
+
+            el.addEventListener("click",function(ev){
+                ev.stopPropagation();
+                ev.preventDefault();
+                if( self.open ){
+                    self._resetMenu();
+                }
+                else{
+                    self._openMenu();
+                    document.addEventListener( "click", function( ev ) {
+                        if ( self.open && !( utils.getParents(ev.target,self.el.className).length > 0 || ev.target==self.el) ){
+                            self.onBodyClick(this);
+                        } 
+                    });
+                }
+            });
+        }
+
+    },
     _openMenu : function( subLevel ) {
-        this.$el.addClass("active");
-        this.$slided.addClass("active");
-        this.$trigger.addClass("active");
+
+        var self = this;
+
+        this.el.classList.add("active");
+        this.slided.classList.add("active");
+
+        var triggersCount = this.trigger.length;
+
+        if ( !triggersCount ){
+            this.trigger.classList.add("active");
+        }else{
+            for( var i = 0; i < triggersCount; i++){
+                this.trigger[i].classList.add("active");
+            }
+        }
+        
         this.open = true;
         this._onMenuOpen();
     },
     _resetMenu : function() {
-        this.$el.removeClass("active");
-        this.$slided.removeClass("active");
-        this.$trigger.removeClass("active");
+        this.el.classList.remove("active");
+        this.slided.classList.remove("active");
+        var triggersCount = this.trigger.length;
+
+        if ( !triggersCount ){
+            this.trigger.classList.remove("active");
+        }else{
+            for( var i = 0; i < triggersCount; i++){
+                this.trigger[i].classList.remove("active");
+            }
+        }
         this.open = false;
         this._onMenuClose();
     },
@@ -90,16 +124,16 @@ melloOffCanvas.prototype = {
     },
   _onMenuOpen: function() {
        // Disable mousewheel scroll when #site-nav is active
-    $('body').on('mousewheel DOMMouseScroll', function(e) {
+    document.getElementsByTagName('body')[0].addEventListener('mousewheel DOMMouseScroll', function(e) {
         if(self.open) {
             e.preventDefault();
         }
     });
-    $('body').keydown(function(e) {
+    document.getElementsByTagName('body')[0].addEventListener('keydown', function(e) {
         var ar = new Array(33,34,35,36,37,38,39,40);
         var key = e.which;
         if(self.open) {
-            if($.inArray(key,ar) > -1){
+            if(ar.indexOf(key) > -1){
                 e.preventDefault();
                 return false;
             }
@@ -107,7 +141,7 @@ melloOffCanvas.prototype = {
     return true;
     });
 
-    $('body').on('touchmove', function(e) { 
+    document.getElementsByTagName('body')[0].addEventListener('touchmove', function(e) { 
         if(self.open) {
             e.preventDefault();
         }
@@ -115,7 +149,7 @@ melloOffCanvas.prototype = {
 
   },
   _onMenuClose : function(){
-    $('body').off();
+    document.getElementsByTagName('body')[0].removeEventListener();
   }
 
 };
