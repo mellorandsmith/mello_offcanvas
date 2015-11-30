@@ -103,7 +103,7 @@ var getParents = function (elem, selector) {
 
 melloOffCanvas.prototype = {
     _init : function(options){
-        console.log('offcanvas menu initialised');
+        console.log('test offcanvas menu initialised');
         this.options = extend( melloOffCanvas.defaults, options );
         this.open = false;
         this._layout();
@@ -136,14 +136,17 @@ melloOffCanvas.prototype = {
           self.el.removeEventListener("click", onBodyClick);
         }
 
-        self.el.getElementsByTagName('a')[0].addEventListener('click', function(e) {
-            if(self.open) {
-                closeSiteNav();
-            }
-        });
+        for(var i = 0; i < self.el.getElementsByTagName('a').length;i++){
+            self.el.getElementsByTagName('a')[i].addEventListener('click', function(e) {
+                if(self.open) {
+                    self._toggleMenu();
+                }
+            });
+        }
 
-        $(document).keyup(function(e) { 
-            if (e.keyCode == 27) { self._toggleMenu() } 
+        
+        document.addEventListener('keyup', function(e) { 
+            if (e.keyCode == 32) { self._toggleMenu() } 
         });
     },
     _openMenu : function( subLevel ) {
