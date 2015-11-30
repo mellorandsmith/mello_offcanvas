@@ -1,16 +1,16 @@
 //import {singleton, container, dependencies} from '../libs/needlepoint';
-import $ from '../../../library/js/libs/jquery';
 
-
+/*
+    el : class without .
+    trigger : class without .
+    slided : ID without #
+ */
 export default function melloOffCanvas (el, trigger, slided, options){
-  
-  if ($(el).length){
-    this.$el = $(el);
-    this.$trigger = $(trigger);
-    this.$slided = $(slided);
-
+  if (el.length){
+    this.el = document.getElementsByClassName(el)[0];
+    this.trigger = document.getElementsByClassName(trigger)[0];
+    this.slided = document.getElementById(slided);
     this._init(options);
-
   }
 
 }
@@ -21,21 +21,101 @@ melloOffCanvas.defaults = {
 
 }
 
+/**
+ * Merge defaults with user options
+ * @private
+ * @param {Object} defaults Default settings
+ * @param {Object} options User options
+ * @returns {Object} Merged values of defaults and options
+ */
+var extend = function ( defaults, options ) {
+    var extended = {};
+    var prop;
+    for (prop in defaults) {
+        if (Object.prototype.hasOwnProperty.call(defaults, prop)) {
+            extended[prop] = defaults[prop];
+        }
+    }
+    for (prop in options) {
+        if (Object.prototype.hasOwnProperty.call(options, prop)) {
+            extended[prop] = options[prop];
+        }
+    }
+    return extended;
+};
+
+/**
+ * Get all DOM element up the tree that contain a class, ID, or data attribute
+ * @param  {Node} elem The base element
+ * @param  {String} selector The class, id, data attribute, or tag to look for
+ * @return {Array} Null if no match
+ */
+var getParents = function (elem, selector) {
+    var parents = [];
+    if ( selector ) {
+        var firstChar = selector.charAt(0);
+    }
+
+    // Get matches
+    for ( ; elem && elem !== document; elem = elem.parentNode ) {
+        if ( selector ) {
+
+            // If selector is a class
+            if ( firstChar === '.' ) {
+                if ( elem.classList.contains( selector.substr(1) ) ) {
+                    parents.push( elem );
+                }
+            }
+
+            // If selector is an ID
+            if ( firstChar === '#' ) {
+                if ( elem.id === selector.substr(1) ) {
+                    parents.push( elem );
+                }
+            }
+
+            // If selector is a data attribute
+            if ( firstChar === '[' ) {
+                if ( elem.hasAttribute( selector.substr(1, selector.length - 1) ) ) {
+                    parents.push( elem );
+                }
+            }
+
+            // If selector is a tag
+            if ( elem.tagName.toLowerCase() === selector ) {
+                parents.push( elem );
+            }
+
+        } else {
+            parents.push( elem );
+        }
+
+    }
+
+    // Return parents if any exist
+    if ( parents.length === 0 ) {
+        return [];
+    } else {
+        return parents;
+    }
+
+};
+
 melloOffCanvas.prototype = {
     _init : function(options){
-        console.log('offcanvas menu initialised');
-        this.options = $.extend( true, {}, melloOffCanvas.defaults, options );
+        console.log('test offcanvas menu initialised');
+        this.options = extend( melloOffCanvas.defaults, options );
         this.open = false;
         this._layout();
         this._initEvents();
     },
     _layout: function(){
-        this.menuItems = this.$el.find("li");
+        this.menuItems = this.el.getElementsByTagName("li");
     },
     _initEvents : function (){
         var self = this;
         // menu button handler
-        this.$trigger.on("click",function(ev){
+        this.trigger.addEventListener("click",function(ev){
             ev.stopPropagation();
             ev.preventDefault();
             if(self.open){
@@ -44,7 +124,7 @@ melloOffCanvas.prototype = {
             else{
                 self._openMenu();
                 document.addEventListener( "click", function( ev ) {
-                    if ( self.open && !( $(ev.target).parents(self.$el.selector).length || ev.target==self.$el[0]) ){
+                    if ( self.open && !( getParents(ev.target,self.el.className).length > 0 || ev.target==self.el) ){
                         onBodyClick(this);
                     } 
                 });
@@ -53,30 +133,33 @@ melloOffCanvas.prototype = {
 
         var onBodyClick = function(el){
           self._resetMenu();
-          self.$el.off("click", onBodyClick);
+          self.el.removeEventListener("click", onBodyClick);
         }
 
-        self.$el.children('a').on('click', function(e) {
-            if(self.open) {
-                closeSiteNav();
-            }
-        });
+        for(var i = 0; i < self.el.getElementsByTagName('a').length;i++){
+            self.el.getElementsByTagName('a')[i].addEventListener('click', function(e) {
+                if(self.open) {
+                    self._toggleMenu();
+                }
+            });
+        }
 
-        $(document).keyup(function(e) { 
-            if (e.keyCode == 27) { self._toggleMenu() } 
+        
+        document.addEventListener('keyup', function(e) { 
+            if (e.keyCode == 32) { self._toggleMenu() } 
         });
     },
     _openMenu : function( subLevel ) {
-        this.$el.addClass("active");
-        this.$slided.addClass("active");
-        this.$trigger.addClass("active");
+        this.el.classList.add("active");
+        this.slided.classList.add("active");
+        this.trigger.classList.add("active");
         this.open = true;
         this._onMenuOpen();
     },
     _resetMenu : function() {
-        this.$el.removeClass("active");
-        this.$slided.removeClass("active");
-        this.$trigger.removeClass("active");
+        this.el.classList.remove("active");
+        this.slided.classList.remove("active");
+        this.trigger.classList.remove("active");
         this.open = false;
         this._onMenuClose();
     },
@@ -90,16 +173,16 @@ melloOffCanvas.prototype = {
     },
   _onMenuOpen: function() {
        // Disable mousewheel scroll when #site-nav is active
-    $('body').on('mousewheel DOMMouseScroll', function(e) {
+    document.getElementsByTagName('body')[0].addEventListener('mousewheel DOMMouseScroll', function(e) {
         if(self.open) {
             e.preventDefault();
         }
     });
-    $('body').keydown(function(e) {
+    document.getElementsByTagName('body')[0].addEventListener('keydown', function(e) {
         var ar = new Array(33,34,35,36,37,38,39,40);
         var key = e.which;
         if(self.open) {
-            if($.inArray(key,ar) > -1){
+            if(ar.indexOf(key) > -1){
                 e.preventDefault();
                 return false;
             }
@@ -107,7 +190,7 @@ melloOffCanvas.prototype = {
     return true;
     });
 
-    $('body').on('touchmove', function(e) { 
+    document.getElementsByTagName('body')[0].addEventListener('touchmove', function(e) { 
         if(self.open) {
             e.preventDefault();
         }
@@ -115,7 +198,7 @@ melloOffCanvas.prototype = {
 
   },
   _onMenuClose : function(){
-    $('body').off();
+    document.getElementsByTagName('body')[0].removeEventListener();
   }
 
 };
